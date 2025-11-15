@@ -139,6 +139,41 @@
             background-clip: text;
         }
 
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1000;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
         nav ul {
             display: flex;
             gap: 1.5rem;
@@ -712,35 +747,65 @@
 
         /* RESPONSIVE */
         @media(max-width: 768px) {
-            nav {
-                padding: 1rem;
+            .hamburger {
+                display: flex;
             }
 
-            nav .container {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 2rem 0;
+                gap: 0;
+            }
+
+            body.dark-mode .nav-menu {
+                background: rgba(15, 23, 42, 0.98);
+            }
+
+            .nav-menu.active {
+                left: 0;
             }
 
             nav ul {
-                gap: 0.5rem;
+                flex-direction: column;
+                gap: 0;
                 width: 100%;
-                flex-wrap: wrap;
+            }
+
+            nav ul li {
+                width: 100%;
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            nav ul li:last-child {
+                border-bottom: none;
             }
 
             nav ul li a {
-                font-size: 0.85rem;
-                padding: 0.3rem 0;
+                font-size: 1.1rem;
+                display: block;
+                padding: 0.5rem 0;
             }
 
             .theme-toggle {
-                font-size: 0.85rem;
-                padding: 0.4rem 0.8rem;
-                margin-top: 0.5rem;
+                width: 80%;
+                margin: 1rem auto 0;
+            }
+
+            nav .container {
+                gap: 0;
             }
 
             .hero {
-                margin-top: 140px;
+                margin-top: 70px;
                 height: auto;
                 min-height: 400px;
                 padding: 3rem 1.5rem;
@@ -783,43 +848,15 @@
 
         @media(max-width: 600px) {
             .logo {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
             }
 
             nav {
-                padding: 0.8rem;
-            }
-
-            nav .container {
-                gap: 0.3rem;
-            }
-
-            nav ul {
-                flex-direction: row;
-                gap: 0.3rem;
-                justify-content: space-between;
-            }
-
-            nav ul li {
-                flex: 1;
-                min-width: fit-content;
-            }
-
-            nav ul li a {
-                font-size: 0.75rem;
-                padding: 0.2rem 0;
-                display: block;
-            }
-
-            .theme-toggle {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.7rem;
-                width: 100%;
-                margin-top: 0.5rem;
+                padding: 1rem;
             }
 
             .hero {
-                margin-top: 160px;
+                margin-top: 70px;
             }
 
             .hero-content h1 {
@@ -882,20 +919,7 @@
 
         @media(max-width: 400px) {
             .logo {
-                font-size: 1rem;
-            }
-
-            nav ul li a {
-                font-size: 0.7rem;
-            }
-
-            .theme-toggle {
-                font-size: 0.7rem;
-                padding: 0.3rem 0.6rem;
-            }
-
-            .hero {
-                margin-top: 170px;
+                font-size: 1.2rem;
             }
 
             .hero-content h1 {
@@ -923,7 +947,12 @@
     <nav>
         <div class="container">
             <a class="logo">WebPro UMKM</a>
-            <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-menu">
                 <ul>
                     <li><a href="#fitur" onclick="smoothScroll(event, '#fitur')">Fitur</a></li>
                     <li><a href="#paket" onclick="smoothScroll(event, '#paket')">Paket</a></li>
@@ -1126,6 +1155,25 @@
     </footer>
 
     <script>
+        // HAMBURGER MENU TOGGLE
+        function toggleMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        }
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                const hamburger = document.querySelector('.hamburger');
+                const navMenu = document.querySelector('.nav-menu');
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
         // WHATSAPP ORDER FUNCTION
         function orderPackage(packageName) {
             const packages = {
